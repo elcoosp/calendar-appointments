@@ -5,7 +5,7 @@ import * as S from './style'
 import { makeProps } from './mocks'
 
 describe('<Appointment />', () => {
-	test('render begin, end and title props', () => {
+	test('should render begin, end and title props', () => {
 		const props = makeProps()
 		const wrapper = shallow(<Appointment {...props} />)
 		expect(wrapper.contains(props.begin)).toBe(true)
@@ -18,6 +18,6 @@ describe('<Appointment />', () => {
 		const wrapper = shallow(<Appointment {...props} />)
 
 		wrapper.find(S.DeleteButton).simulate('click')
-		expect(props.handleDelete).toHaveBeenCalled()
+		expect(props.handleDelete).toHaveBeenCalledTimes(1)
 	})
 })

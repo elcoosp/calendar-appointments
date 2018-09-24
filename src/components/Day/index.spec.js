@@ -7,7 +7,7 @@ import * as S from './style'
 import { makeProps } from './mocks'
 
 describe('<Day />', () => {
-	test('render the dayDate formatted and a list of appointments', () => {
+	test('should render the dayDate formatted and a list of appointments', () => {
 		const props = makeProps()
 		const wrapper = shallow(<Day {...props} />)
 
@@ -23,15 +23,15 @@ describe('<Day />', () => {
 		).toBe(true)
 	})
 
-	test('call handleClick on DayDate click', () => {
+	test('should call handleClick on DayDate click', () => {
 		const props = makeProps()
 		const wrapper = shallow(<Day {...props} />)
 
 		wrapper.find(S.DayDate).simulate('click')
-		expect(props.handleClick).toHaveBeenCalled()
+		expect(props.handleClick).toHaveBeenCalledTimes(1)
 	})
 
-	test('call handleAppointmentDelete on DayDate click', () => {
+	test('should call handleAppointmentDelete...', () => {
 		// Todo
 	})
 })
