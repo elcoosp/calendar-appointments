@@ -11,10 +11,15 @@ const Appointment = ({ begin, end, title, handleDelete }) => (
 	</S.Wrapper>
 )
 
-Appointment.propTypes = {
+export const appointmentPropTypes = {
 	begin: P.string.isRequired,
 	end: P.string.isRequired,
 	title: P.string.isRequired,
+	id: P.string.isRequired
+}
+
+Appointment.propTypes = {
+	...appointmentPropTypes,
 	handleDelete: P.func.isRequired
 }
 
