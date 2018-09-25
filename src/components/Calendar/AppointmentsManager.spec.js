@@ -96,7 +96,7 @@ describe('AppointmentsManager', () => {
 		const previousAppointments = {
 			[mocks.dayHash]: [appointment2, appointment1]
 		}
-		const sorter = (a, b) => (a.start < b.start ? 0 : 1)
+		const sorter = (a, b) => (a.start < b.start ? -1 : 1)
 		// Act
 		const result = AppointmentsManager.getDay(
 			date,

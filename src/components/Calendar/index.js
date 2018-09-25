@@ -73,7 +73,7 @@ class Calendar extends Component {
 	getDayAppointments = date =>
 		AppointmentsManager.getDay(
 			date,
-			(a, b) => (a.begin < b.begin ? 0 : 1),
+			(a, b) => (a.begin < b.begin ? -1 : 1),
 			this.state.appointments
 		)
 
