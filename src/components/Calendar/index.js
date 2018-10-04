@@ -24,7 +24,27 @@ class Calendar extends Component {
 		form: { isOpen: false, day: null }
 	}
 
+	render() {
+		return (
+			<div>
+				{this.renderNavigation()}
+				{this.renderMonthGrid()}
+				{this.renderForm()}
+			</div>
+		)
+	}
+
 	// Navigation
+	renderNavigation = () => (
+		<header>
+			<Navigation
+				handlePreviousMonth={this.goToPreviousMonth}
+				currentMonth={format(this.state.currentDate, 'MMMM YYYY')}
+				handleNextMonth={this.goToNextMonth}
+			/>
+		</header>
+	)
+
 	goToNextMonth = () =>
 		this.setState(prevState => ({
 			currentDate: addMonths(prevState.currentDate, 1)
@@ -35,30 +55,19 @@ class Calendar extends Component {
 			currentDate: subMonths(prevState.currentDate, 1)
 		}))
 
-	// AddAppointmentForm
-	openForm = day =>
-		this.setState(_ => ({
-			form: { isOpen: true, day }
-		}))
-
-	closeForm = () =>
-		this.setState(_ => ({
-			form: { isOpen: false, day: null }
-		}))
-
-	// Appointments add and delete handling
-	addAppointment = values => {
-		this.setState(
-			prevState => ({
-				appointments: AppointmentsManager.add(
-					prevState.form.day,
-					{ id: cuid(), ...values },
-					prevState.appointments
-				)
-			}),
-			this.closeForm
-		)
-	}
+	// MonthGrid
+	renderMonthGrid = () => (
+		<S.MonthGrid>
+			{this.getMonthAppointments().map((day, i) => (
+				<Day
+					key={i}
+					{...day}
+					handleAppointmentDelete={this.deleteAppointment}
+					handleClick={() => this.openForm(day.dayDate)}
+				/>
+			))}
+		</S.MonthGrid>
+	)
 
 	deleteAppointment = (ap, dayDate) =>
 		this.setState(prevState => ({
@@ -93,40 +102,39 @@ class Calendar extends Component {
 		return monthAppointments
 	}
 
-	render() {
-		const { currentDate, form } = this.state
-		const month = this.getMonthAppointments()
+	// Form
+	renderForm = () =>
+		this.state.form.isOpen && (
+			<AddAppointmentForm
+				title={`Add an appointment for the ${format(
+					this.state.form.day,
+					'D MMMM'
+				)}`}
+				handleSubmit={this.addAppointment}
+				handleClose={this.closeForm}
+			/>
+		)
 
-		return (
-			<div>
-				<header>
-					<Navigation
-						handlePreviousMonth={this.goToPreviousMonth}
-						currentMonth={format(currentDate, 'MMMM YYYY')}
-						handleNextMonth={this.goToNextMonth}
-					/>
-				</header>
+	openForm = day =>
+		this.setState(_ => ({
+			form: { isOpen: true, day }
+		}))
 
-				<S.MonthGrid>
-					{month.map((day, i) => (
-						// Todo: Produce a hash id for each day instead of relying on index as key
-						<Day
-							key={i}
-							{...day}
-							handleAppointmentDelete={this.deleteAppointment}
-							handleClick={() => this.openForm(day.dayDate)}
-						/>
-					))}
-				</S.MonthGrid>
+	closeForm = () =>
+		this.setState(_ => ({
+			form: { isOpen: false, day: null }
+		}))
 
-				{form.isOpen && (
-					<AddAppointmentForm
-						title={`Add an appointment for the ${format(form.day, 'D MMMM')}`}
-						handleSubmit={this.addAppointment}
-						handleClose={this.closeForm}
-					/>
-				)}
-			</div>
+	addAppointment = values => {
+		this.setState(
+			prevState => ({
+				appointments: AppointmentsManager.add(
+					prevState.form.day,
+					{ id: cuid(), ...values },
+					prevState.appointments
+				)
+			}),
+			this.closeForm
 		)
 	}
 }
